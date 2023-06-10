@@ -1,6 +1,6 @@
 // graphql/schema.ts
 import './types/AccessKey';
-import './types/Device';
+import './device/schema';
 import './types/NanoleafAuthToken';
 import './types/NanoleafProperties';
 import './types/Palette';
