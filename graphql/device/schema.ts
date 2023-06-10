@@ -1,4 +1,4 @@
-import { builder } from 'graphql/builder';
+import { builder } from '../builder';
 
 import { copy } from './definitions';
 import { discoverWifiDevices, discoverWifiDevicesByType } from './resolvers';
@@ -33,7 +33,7 @@ const DeviceType = builder.enumType('DeviceType', {
 builder.queryFields((t) => ({
   discoverWifiDevices: t.field({
     type: ['WifiDevice'],
-    // resolve: async () => discoverWifiDevices(),
+    description: copy.descriptions.discoverWifiDevices,
     resolve: async () => {
       const wifiDevices = await discoverWifiDevices();
 
@@ -42,9 +42,10 @@ builder.queryFields((t) => ({
   }),
   discoverWifiDevicesByType: t.field({
     type: ['WifiDevice'],
+    description: copy.descriptions.discoverWifiDevicesByType,
     args: {
       type: t.arg({
-        type: 'DeviceType',
+        type: 'WifiDeviceType',
         required: true,
       }),
     },
