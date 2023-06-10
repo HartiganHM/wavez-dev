@@ -11,7 +11,7 @@ export enum DeviceType {
 }
 
 export enum DeviceMacSubstringByType {
-  NANOLEAF = '02:55:da',
+  NANOLEAF = '00:55:da',
   LIFX = 'd0:73:d5',
   HUE = 'ECB5',
 }
