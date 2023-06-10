@@ -1,26 +1,25 @@
 import { PrismaClient } from '@prisma/client';
-import { links } from '../data/links';
-
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.create({
+  const admin = await prisma.user.create({
     data: {
-      email: 'test@gmail.com',
+      email: 'hartigan.hm@gmail.com',
+      name: 'Hugh Hartigan',
       role: 'ADMIN',
     },
   });
 
-  await prisma.link.createMany({
-    data: links,
-  });
+  console.log(admin);
+
+  // TODO: Add seed for home Nanoleaf and Access Keys
 }
 
 main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });
