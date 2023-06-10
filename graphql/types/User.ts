@@ -10,7 +10,7 @@ builder.prismaObject('User', {
     palettes: t.relation('palettes'),
     role: t.expose('role', { type: Role }),
     invites: t.exposeInt('invites'),
-    invitedById: t.exposeID('invitedById', { nullable: true }),
+    invitedById: t.exposeString('invitedById', { nullable: true }),
     invitedBy: t.relation('invitedBy'),
     invitedUserToUser: t.relation('invitedUserToUser'),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),

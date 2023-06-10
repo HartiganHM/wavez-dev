@@ -7,12 +7,14 @@ builder.prismaObject('Device', {
     name: t.exposeString('name'),
     mac: t.exposeString('mac'),
     type: t.expose('type', { type: DeviceType }),
-    userId: t.exposeID('userId'),
+    userId: t.exposeString('userId'),
     user: t.relation('user'),
     palettes: t.relation('palettes'),
-    nanoleafAuthTokenId: t.exposeID('nanoleafAuthTokenId', { nullable: true }),
+    nanoleafAuthTokenId: t.exposeString('nanoleafAuthTokenId', {
+      nullable: true,
+    }),
     nanoleafAuthToken: t.relation('nanoleafAuthToken'),
-    nanoleafPropertiesId: t.exposeID('nanoleafPropertiesId', {
+    nanoleafPropertiesId: t.exposeString('nanoleafPropertiesId', {
       nullable: true,
     }),
     nanoleafProperties: t.relation('nanoleafProperties'),
