@@ -1,3 +1,4 @@
+
 // 1. Defines all the libraries and utilities that will be needed
 import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
@@ -21,7 +22,7 @@ export const builder = new SchemaBuilder<{
       Input: IDevice;
       Output: IDevice;
     };
-    DeviceType: {
+    WifiDeviceType: {
       Input: deviceTypes.DeviceType;
       Output: deviceTypes.DeviceType;
     };
@@ -37,7 +38,7 @@ export const builder = new SchemaBuilder<{
 
 // 5. Add custom scalar types
 builder.addScalarType('DateTime', DateResolver, {});
-builder.scalarType('DeviceType', {
+builder.scalarType('WifiDeviceType', {
   serialize: (n) => n,
 });
 builder.scalarType('WifiDevice', {
