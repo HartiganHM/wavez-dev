@@ -31,7 +31,14 @@ export default function Home() {
   const renderWifiDevices = () => (
     <section className={styles.wifiDevicesContainer}>
       {data.wifiDevicesByType.map((wifiDevice: IDevice) => (
-        <Card className={tw.w_full} radius="xl" key={wifiDevice.ip}>
+        <Card
+          className={tw.w_full}
+          radius="xl"
+          key={wifiDevice.ip}
+          isHoverable
+          isPressable
+          onPress={() => console.log(wifiDevice.ip)}
+        >
           <CardHeader>
             <p>{wifiDevice.name}</p>
           </CardHeader>
