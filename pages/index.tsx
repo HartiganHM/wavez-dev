@@ -1,9 +1,9 @@
 // /pages/index.tsx
 import { gql, useQuery } from '@apollo/client';
-import { Container, Card, Grid, Text } from '@nextui-org/react';
+import { Container, Card, Grid, Text, Loading } from '@nextui-org/react';
 import { IDevice } from 'local-devices';
 
-const AllWifiDevices = gql`
+const GET_WIFIF_DEVICES_BY_TYPE = gql`
   query {
     wifiDevices {
       ip
@@ -17,7 +17,17 @@ export default function Home() {
   const { data, loading, error } = useQuery(AllWifiDevices);
   console.log(data);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Container
+        alignContent="center"
+        fluid
+        justify="center"
+        css={{ height: '100%' }}
+      >
+        <Loading color="secondary" size="lg" />
+      </Container>
+    );
   if (error) return <p>Oh no... {error.message}</p>;
 
   return (

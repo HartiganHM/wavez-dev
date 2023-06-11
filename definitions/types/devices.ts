@@ -1,9 +1,3 @@
-export interface WifiDevice {
-  id: string;
-  mac: string;
-  name: string;
-}
-
 export enum DeviceType {
   NANOLEAF = 'NANOLEAF',
   LIFX = 'LIFX',

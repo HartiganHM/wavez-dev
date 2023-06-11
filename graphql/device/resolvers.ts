@@ -1,6 +1,6 @@
 import find, { IDevice } from 'local-devices';
 
-import { types } from './definitions';
+import { DeviceMacSubstringByType, DeviceType } from '../../definitions/types';
 
 const findeDeviceByType = (device: IDevice, macSubstring: string) =>
   device.mac.toLocaleLowerCase().includes(macSubstring.toLocaleLowerCase());
@@ -18,16 +18,13 @@ export const discoverWifiDevices = async (): Promise<IDevice[]> => {
 };
 
 export const discoverWifiDevicesByType = async (
-  type: types.DeviceType,
+  type: DeviceType,
 ): Promise<IDevice[]> => {
   try {
     const devices = await discoverWifiDevices();
 
     const filteredDevices = devices.filter((device: IDevice) => {
-      const match = findeDeviceByType(
-        device,
-        types.DeviceMacSubstringByType[type],
-      );
+      const match = findeDeviceByType(device, DeviceMacSubstringByType[type]);
 
       return match;
     });

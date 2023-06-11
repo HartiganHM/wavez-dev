@@ -7,7 +7,7 @@ import { DateResolver } from 'graphql-scalars';
 import { IDevice } from 'local-devices';
 
 import prisma from '../lib/prisma';
-import { types as deviceTypes } from './device/definitions';
+import { DeviceType } from '../definitions/types';
 
 // 2. Creates a new SchemaBuilder instance
 export const builder = new SchemaBuilder<{
@@ -23,8 +23,8 @@ export const builder = new SchemaBuilder<{
       Output: IDevice;
     };
     WifiDeviceType: {
-      Input: deviceTypes.DeviceType;
-      Output: deviceTypes.DeviceType;
+      Input: DeviceType;
+      Output: DeviceType;
     };
   };
 }>({
