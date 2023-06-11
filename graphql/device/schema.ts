@@ -1,7 +1,22 @@
+import { IDevice } from 'local-devices';
 import { builder } from '../builder';
 
 import { copy } from './definitions';
 import { discoverWifiDevices, discoverWifiDevicesByType } from './resolvers';
+
+builder.simpleObject('WifiDevice', {
+  fields: (t) => ({
+    ip: t.string({
+      nullable: false,
+    }),
+    name: t.string({
+      nullable: true,
+    }),
+    mac: t.string({
+      nullable: true,
+    }),
+  }),
+});
 
 builder.prismaObject('Device', {
   fields: (t) => ({
@@ -31,7 +46,7 @@ const DeviceType = builder.enumType('DeviceType', {
 });
 
 builder.queryFields((t) => ({
-  discoverWifiDevices: t.field({
+  wifiDevices: t.field({
     type: ['WifiDevice'],
     description: copy.descriptions.discoverWifiDevices,
     resolve: async () => {
@@ -40,7 +55,7 @@ builder.queryFields((t) => ({
       return wifiDevices;
     },
   }),
-  discoverWifiDevicesByType: t.field({
+  wifiDevicesByType: t.field({
     type: ['WifiDevice'],
     description: copy.descriptions.discoverWifiDevicesByType,
     args: {
