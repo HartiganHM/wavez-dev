@@ -6,6 +6,7 @@ import type PrismaTypes from '@pothos/plugin-prisma/generated';
 import { DateResolver } from 'graphql-scalars';
 import { IDevice } from 'local-devices';
 
+import { createContext } from './context';
 import prisma from '../lib/prisma';
 import { DeviceType } from '../definitions/types';
 
@@ -13,6 +14,7 @@ import { DeviceType } from '../definitions/types';
 export const builder = new SchemaBuilder<{
   // 3. Defines the static types that will be used in creating the GraphQL schema
   PrismaTypes: PrismaTypes;
+  Context: ReturnType<typeof createContext>;
   Scalars: {
     DateTime: {
       Input: Date;
