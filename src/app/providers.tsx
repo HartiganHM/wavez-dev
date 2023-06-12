@@ -1,6 +1,7 @@
 // app/providers.tsx
 'use client';
 
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { ApolloProvider } from '@apollo/client';
 import { NextUIProvider } from '@nextui-org/react';
 
@@ -9,11 +10,13 @@ import Nav from 'src/components/nav';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NextUIProvider>
+    <UserProvider>
       <ApolloProvider client={apolloClient}>
-        <Nav />
-        {children}
+        <NextUIProvider>
+          <Nav />
+          {children}
+        </NextUIProvider>
       </ApolloProvider>
-    </NextUIProvider>
+    </UserProvider>
   );
 }
