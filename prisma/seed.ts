@@ -2,15 +2,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const admin = await prisma.user.create({
+  await prisma.user.create({
     data: {
-      email: 'hartigan.hm@gmail.com',
+      email: 'hugh@featherweight.design',
       name: 'Hugh Hartigan',
       role: 'ADMIN',
     },
   });
-
-  console.log(admin);
 
   // TODO: Add seed for home Nanoleaf and Access Keys
 }
