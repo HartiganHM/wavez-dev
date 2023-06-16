@@ -1,7 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { device, nanoleafAuthToken, nanoleafProperties, palettes } from 'data';
+import {
+  device,
+  nanoleafAuthToken,
+  nanoleafProperties,
+  palettes,
+} from '../data';
 
 async function main() {
   /**
@@ -25,33 +30,51 @@ async function main() {
     },
   });
 
-  await prisma.device.createMany({
-    data: device.map((device, index) => {
-      const paletteConfig =
-        index === 0
-          ? {
-              create: palettes,
-            }
-          : {
-              connect: palettes.map(({ name }) => ({ name })),
-            };
+  await prisma.device.create({
+    data: {
+      ...device[0],
+      userId: user.id,
+      nanoleafAuthToken: {
+        create: {
+          token: nanoleafAuthToken[0].token,
+        },
+      },
+      nanoleafProperties: {
+        create: {
+          ...nanoleafProperties[0],
+        },
+      },
+      palettes: {
+        create: palettes.map((palette) => ({
+          ...palette,
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        })),
+      },
+    },
+  });
 
-      return {
-        ...device,
-        userId: user.id,
-        nanoleafAuthToken: {
-          create: {
-            token: nanoleafAuthToken[index].token,
-          },
+  await prisma.device.create({
+    data: {
+      ...device[1],
+      userId: user.id,
+      nanoleafAuthToken: {
+        create: {
+          token: nanoleafAuthToken[1].token,
         },
-        nanoleafProperties: {
-          create: {
-            ...nanoleafProperties[index],
-          },
+      },
+      nanoleafProperties: {
+        create: {
+          ...nanoleafProperties[1],
         },
-        palletes: paletteConfig,
-      };
-    }),
+      },
+      palettes: {
+        connect: palettes.map(({ name }) => ({ name })),
+      },
+    },
   });
 }
 
