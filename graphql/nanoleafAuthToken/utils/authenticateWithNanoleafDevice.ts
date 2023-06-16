@@ -6,7 +6,7 @@ import { constants } from '../definitions';
 const { endpoints } = constants;
 
 const authenticateWithNanoleafDevice = async (
-  ipAddress: string
+  ipAddress: string,
 ): Promise<string> => {
   try {
     const response = await fetch(endpoints.authenticate(ipAddress), {
@@ -21,7 +21,6 @@ const authenticateWithNanoleafDevice = async (
     return authToken;
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
