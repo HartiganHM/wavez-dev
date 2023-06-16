@@ -52,3 +52,5 @@ builder.queryType({
     }),
   }),
 });
+
+builder.mutationType({});
