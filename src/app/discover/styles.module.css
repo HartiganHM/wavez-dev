@@ -11,3 +11,14 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
 }
+
+.deviceInfoContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.deviceInputContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
