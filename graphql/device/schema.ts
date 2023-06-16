@@ -3,6 +3,7 @@ import { builder } from '../builder';
 
 import { copy } from './definitions';
 import { discoverWifiDevices, discoverWifiDevicesByType } from './resolvers';
+import prisma from 'lib/prisma';
 
 builder.simpleObject('WifiDevice', {
   fields: (t) => ({
@@ -28,13 +29,7 @@ builder.prismaObject('Device', {
     userId: t.exposeString('userId'),
     user: t.relation('user'),
     palettes: t.relation('palettes'),
-    nanoleafAuthTokenId: t.exposeString('nanoleafAuthTokenId', {
-      nullable: true,
-    }),
     nanoleafAuthToken: t.relation('nanoleafAuthToken'),
-    nanoleafPropertiesId: t.exposeString('nanoleafPropertiesId', {
-      nullable: true,
-    }),
     nanoleafProperties: t.relation('nanoleafProperties'),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
     updatedAt: t.expose('updatedAt', { type: 'DateTime' }),
@@ -46,6 +41,25 @@ const DeviceType = builder.enumType('DeviceType', {
 });
 
 builder.queryFields((t) => ({
+  getAllDevicesByUserId: t.prismaField({
+    type: ['Device'],
+    description: copy.descriptions.getAllDevicesByUserId,
+    resolve: async (query, parent, args, ctx) => {
+      const { user } = await ctx;
+
+      if (!user) {
+        throw new Error('You have to be logged in to perform this action');
+      }
+
+      const devices = await prisma.device.findMany({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      return devices;
+    },
+  }),
   wifiDevices: t.field({
     type: ['WifiDevice'],
     description: copy.descriptions.discoverWifiDevices,
@@ -64,7 +78,7 @@ builder.queryFields((t) => ({
         required: true,
       }),
     },
-    resolve: async (parent, args) => {
+    resolve: async (query, args) => {
       const wifiDevicesByType = await discoverWifiDevicesByType(args.type);
 
       return wifiDevicesByType;
