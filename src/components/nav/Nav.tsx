@@ -3,6 +3,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
+  Avatar,
   Button,
   Link,
   Navbar,
@@ -18,6 +19,7 @@ import copy from 'definitions/copy/nav';
 const Nav = () => {
   const pathname = usePathname();
   const { user } = useUser();
+  console.log(user);
 
   const renderUnauthenticatedCta = () => (
     <>
@@ -47,6 +49,15 @@ const Nav = () => {
         >
           {copy.logOut}
         </Button>
+      </NavbarItem>
+
+      <NavbarItem>
+        <Avatar
+          isBordered
+          color="secondary"
+          size="sm"
+          src={user?.picture || ''}
+        />
       </NavbarItem>
     </>
   );
