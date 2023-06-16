@@ -7,7 +7,7 @@ import {
   getAllPanelProperties,
 } from './utils';
 
-import { types } from './definitions';
+import { errors, types } from './definitions';
 
 export const authenticateWithDeviceByUserId = async ({
   device,
@@ -36,7 +36,7 @@ export const authenticateWithDeviceByUserId = async ({
 
     /**
      * * 1. Create device and connect to use via userId
-     * * 2. Create nanoleafAuthroken and connect to device via token
+     * * 2. Create nanoleafAuthToken and connect to device via token
      * * 3. Create nanoleafProperties and connect to device via device
      * * 4. Create many or connect existing palettes to device if shouldSyncPalettes = true
      */
@@ -68,7 +68,11 @@ export const authenticateWithDeviceByUserId = async ({
 
     return token;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    if (error.message.includes('The provided authToken')) {
+      throw new Error(JSON.stringify(errors.auth(error.status)));
+    }
+
     throw new Error('Bad things are bad');
   }
 };
