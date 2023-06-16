@@ -1,7 +1,18 @@
-// graphql/context.ts
-import { getSession } from '@auth0/nextjs-auth0';
-import prisma from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from '@auth0/nextjs-auth0';
+import { User } from '@prisma/client';
+
+import prisma from 'lib/prisma';
+
+const getUser = async (email: string): Promise<User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return user;
+};
 
 export async function createContext({
   req,
@@ -11,21 +22,14 @@ export async function createContext({
   res: NextApiResponse;
 }) {
   const session = await getSession(req, res);
+  const userEmail = process.env.DEFAULT_USER || session?.user.email;
 
-  // if the user is not logged in, return an empty object
-  if (!session || typeof session === 'undefined') return {};
-
-  const { user: authUser, accessToken } = session;
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: authUser.email,
-    },
-  });
+  const user = await getUser(userEmail);
+  console.log(user);
+  console.log(process.env.DEFAULT_USER)
 
   return {
     user,
-    authUser,
-    accessToken,
+    session,
   };
 }
