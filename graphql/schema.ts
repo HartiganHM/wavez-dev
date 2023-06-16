@@ -1,6 +1,6 @@
 import './types/AccessKey';
 import './device/schema';
-import './types/NanoleafAuthToken';
+import './nanoleafAuthToken/schema'
 import './types/NanoleafProperties';
 import './types/Palette';
 import './types/User';
