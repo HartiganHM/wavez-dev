@@ -26,18 +26,21 @@ const getPaletteSyncConfig = async ({
       }
 
       return true;
-    })
+    }),
   );
 
   const connectPalettes = effectsDetails.filter(
-    (_element, index) => paletteCheck[index]
+    (_element, index) => paletteCheck[index],
   );
 
   const createPalettes = effectsDetails.filter(({ animName }) =>
-    connectPalettes.find(palette => palette.animName === animName)
+    connectPalettes.find((palette) => palette.animName === animName)
       ? false
-      : true
+      : true,
   );
+
+  // Remove invalid first element in array
+  createPalettes.splice(0, 1);
 
   const paletteConfig = {
     connect: connectPalettes.map(({ animName }) => ({
