@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
   } catch (err) {
-    console.error(err);
+    console.error('🔥', err);
   }
 };
 

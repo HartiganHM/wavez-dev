@@ -15,6 +15,7 @@ export async function createContext({
   if (!session || typeof session === 'undefined') return {};
 
   const { user, accessToken } = session;
+  console.log(user);
 
   return {
     user,
