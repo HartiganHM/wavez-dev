@@ -5,6 +5,6 @@ export default [
   },
   // Right
   {
-    token: 'Zjg5mT71rE3VlPwf5WbIYL70yTbdBu9b',
+    token: 'pRkV7cty4hUbJmszTC8Znb5605GGwyYv',
   },
 ];
