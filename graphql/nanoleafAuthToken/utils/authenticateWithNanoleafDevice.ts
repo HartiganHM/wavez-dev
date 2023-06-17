@@ -11,12 +11,14 @@ const authenticateWithNanoleafDevice = async (
   try {
     const response = await fetch(endpoints.authenticate(ipAddress), {
       method: 'POST',
+      redirect: 'follow',
     });
 
     validateNanoleafResponse(response, ipAddress);
 
     const { auth_token: authToken } =
       (await response.json()) as NanoleafAuthenticationResponse;
+    console.log('🐸', authToken);
 
     return authToken;
   } catch (error) {

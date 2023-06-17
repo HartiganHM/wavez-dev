@@ -4,6 +4,8 @@ const validateNanoleafResponse = (
   response: Response,
   ipAddress: string,
 ): void => {
+  console.log(response);
+  console.log('🔥', response.status);
   if (response.status === 401) {
     throw new Error(JSON.stringify(errors.unauthenticated));
   }
