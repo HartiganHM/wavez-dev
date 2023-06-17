@@ -1,4 +1,4 @@
-import { IDevice } from 'local-devices';
+import { GraphQLError } from 'graphql';
 import { builder } from '../builder';
 
 import { copy } from './definitions';
@@ -48,7 +48,8 @@ builder.queryFields((t) => ({
       const { user } = await ctx;
 
       if (!user) {
-        throw new Error('You have to be logged in to perform this action');
+        // TODO: Add logging for full error
+        throw new GraphQLError('You have to be logged in to perform this action');
       }
 
       const devices = await prisma.device.findMany({
