@@ -1,6 +1,10 @@
 'use client';
 
-import { useLazyQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
   Button,
   ButtonGroup,
@@ -22,11 +26,13 @@ import { IDevice } from 'local-devices';
 import { tw } from 'typewind';
 
 import { DeviceType } from 'definitions/types';
-import { GET_WIFIF_DEVICES_BY_TYPE } from 'definitions/graphql';
+import {
+  ADD_NEW_NANOLEAF_DEVICE,
+  GET_WIFI_DEVICES_BY_TYPE,
+} from 'definitions/graphql';
 import copy from 'definitions/copy/discover';
 
 import styles from './styles.module.css';
-import { useState } from 'react';
 
 const defaultDevice = {
   ip: '',
@@ -35,15 +41,29 @@ const defaultDevice = {
 };
 
 export default function Home() {
+  const { user, isLoading: loadingUser } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user && !loadingUser) {
+      router.push('/');
+    }
+  }, [loadingUser]);
+
   const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
   const [newDeviceName, updateNewDeviceName] = useState<string>('');
   const [shouldSyncPalettes, toggleShouldSyncPalettes] =
     useState<boolean>(true);
   const [selectedDevice, updateSelectedDevice] =
     useState<IDevice>(defaultDevice);
-  const [getWifiDevicesByType, { data, loading, error }] = useLazyQuery(
-    GET_WIFIF_DEVICES_BY_TYPE,
-  );
+  const [
+    getWifiDevicesByType,
+    { data: wifiDevicesData, loading: loadingDevices, error: wifiDevicesError },
+  ] = useLazyQuery(GET_WIFI_DEVICES_BY_TYPE);
+  const [
+    addNewDevice,
+    { data: newDeviceData, loading: loadingNewDevice, error: newDeviceError },
+  ] = useMutation(ADD_NEW_NANOLEAF_DEVICE);
 
   const handleGetWifiDevices = (type: DeviceType) => {
     getWifiDevicesByType({ variables: { type } });
@@ -55,6 +75,33 @@ export default function Home() {
     onOpen();
   };
 
+  const handleConnectDevice = async () => {
+    try {
+      const input = {
+        name: newDeviceName,
+        ip: selectedDevice.ip,
+        mac: selectedDevice.mac,
+        shouldSyncPalettes,
+      };
+      const myPromise = addNewDevice({
+        variables: {
+          input,
+        },
+      });
+
+      toast.promise(myPromise, {
+        pending: `Connecting to ${newDeviceName}`,
+        success: `Successfully synced with ${newDeviceName}`,
+        error: `Unable to connect: ${newDeviceError?.message}`,
+      });
+
+      console.log(newDeviceError);
+      console.log(newDeviceData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleCloseModal = () => {
     updateSelectedDevice(defaultDevice);
     updateNewDeviceName('');
@@ -63,7 +110,7 @@ export default function Home() {
 
   const renderWifiDevices = () => (
     <section className={styles.wifiDevicesContainer}>
-      {data.wifiDevicesByType.map((wifiDevice: IDevice) => (
+      {wifiDevicesData.wifiDevicesByType.map((wifiDevice: IDevice) => (
         <Card
           className={tw.w_full}
           radius="xl"
@@ -97,7 +144,12 @@ export default function Home() {
 
   return (
     <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="xl"
+        onClose={handleCloseModal}
+      >
         <ModalContent>
           <ModalHeader>{copy.nanoleafModal.header}</ModalHeader>
 
@@ -146,7 +198,8 @@ export default function Home() {
             <Button
               color="secondary"
               variant="shadow"
-              onPress={handleCloseModal}
+              onPress={handleConnectDevice}
+              isLoading={loadingNewDevice}
             >
               {copy.nanoleafModal.connectButtonValue}
             </Button>
@@ -159,21 +212,21 @@ export default function Home() {
 
         <ButtonGroup size="xl" color="secondary" variant="ghost">
           <Button
-            disabled={loading}
+            disabled={loadingDevices}
             onPress={() => handleGetWifiDevices(DeviceType.NANOLEAF)}
           >
             {copy.nanoleafButtonValue}
           </Button>
           <Button
-            disabled={loading}
+            disabled={loadingDevices}
             onPress={() => handleGetWifiDevices(DeviceType.LIFX)}
           >
             {copy.lifxButtonValue}
           </Button>
         </ButtonGroup>
 
-        {loading && renderWifiLoader()}
-        {!!data?.wifiDevicesByType.length && renderWifiDevices()}
+        {loadingDevices && renderWifiLoader()}
+        {!!wifiDevicesData?.wifiDevicesByType.length && renderWifiDevices()}
       </main>
     </>
   );
