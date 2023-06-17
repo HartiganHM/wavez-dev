@@ -1,5 +1,6 @@
-import prisma from 'lib/prisma';
+import { GraphQLError } from 'graphql';
 
+import prisma from 'lib/prisma';
 import { getPaletteSyncConfig } from 'graphql/palettes/utils';
 import {
   authenticateWithNanoleafDevice,
@@ -40,7 +41,7 @@ export const authenticateWithDeviceByUserId = async ({
      * * 3. Create nanoleafProperties and connect to device via device
      * * 4. Create many or connect existing palettes to device if shouldSyncPalettes = true
      */
-    await prisma.device.create({
+    const newDevice = await prisma.device.create({
       data: {
         ...device,
         type: 'NANOLEAF',
@@ -66,13 +67,14 @@ export const authenticateWithDeviceByUserId = async ({
       },
     });
 
-    return token;
+    return newDevice;
   } catch (error) {
     console.error(error);
     if (error.message.includes('The provided authToken')) {
-      throw new Error(JSON.stringify(errors.auth(error.status)));
+      // TODO: Add logging for full error
+      throw new GraphQLError(errors.auth(error.status).friendlyMessage);
     }
 
-    throw new Error('Bad things are bad');
+    throw new GraphQLError(error);
   }
 };

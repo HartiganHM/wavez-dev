@@ -1,3 +1,5 @@
+import { GraphQLError } from 'graphql';
+
 import { authenticateWithDeviceByUserId } from './resolvers';
 import { builder } from '../builder';
 
@@ -25,12 +27,12 @@ const AuthenticateWithDeviceInput = builder.inputType(
 );
 
 builder.mutationField('authenticateWithDeviceByUserId', (t) =>
-  t.field({
-    type: 'String',
+  t.prismaField({
+    type: 'Device',
     args: {
       input: t.arg({ type: AuthenticateWithDeviceInput, required: true }),
     },
-    resolve: async (query, args, ctx) => {
+    resolve: async (query, parent, args, ctx) => {
       const { user } = await ctx;
       const { shouldSyncPalettes, ip, name, mac } = args.input;
 
@@ -41,16 +43,19 @@ builder.mutationField('authenticateWithDeviceByUserId', (t) =>
       };
 
       if (!user) {
-        throw new Error('You have to be logged in to perform this action');
+        // TODO: Add logging for full error
+        throw new GraphQLError(
+          'You have to be logged in to perform this action',
+        );
       }
 
-      const authToken = await authenticateWithDeviceByUserId({
+      const newDevice = await authenticateWithDeviceByUserId({
         device,
         shouldSyncPalettes: shouldSyncPalettes || false,
         user,
       });
 
-      return authToken;
+      return newDevice;
     },
   }),
 );
