@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { GraphQLError } from 'graphql';
+
 import { errors } from '../definitions';
 
 const doesDeviceExistByIpAddress = async (
@@ -13,9 +15,10 @@ const doesDeviceExistByIpAddress = async (
 
   //* IP addresses much be unique, so throw error accordingly
   if (doesDeviceExist) {
-    const error = errors.deviceConflict(ipAddress);
+    const error = errors.deviceConflict(ipAddress).friendlyMessage;
 
-    throw new Error(JSON.stringify(error));
+    // TODO: Add logging for full error
+    throw new GraphQLError(error);
   }
 };
 
