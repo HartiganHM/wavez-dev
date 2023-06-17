@@ -8,7 +8,7 @@ export default [
     type: DeviceType.NANOLEAF,
   },
   {
-    ip: '192.168.50.171',
+    ip: '192.168.50.172',
     name: 'HD Twinkle Right',
     mac: '00:55:da:59:4b:fd',
     type: DeviceType.NANOLEAF,
