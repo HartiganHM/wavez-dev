@@ -3,7 +3,18 @@ const copy = {
   logOut: 'Log out',
   signUp: 'Sign up',
   navLinks: {
-    discover: 'Discover',
+    devices: {
+      label: 'Devices',
+      aria: 'Wavez Devices',
+    },
+    discover: {
+      label: 'Discover',
+      description: 'Discover compatible devices on your WiFi network'
+    },
+    lights: {
+      label: 'Lights',
+      description: 'Your saved smart light devices'
+    }
   },
 };
 
