@@ -1,7 +1,7 @@
 export default [
   // Left
   {
-    token: 'pNhdf8cky9uHLukDtCwLjk22liwscdvB',
+    token: 'cTppWGoPLMRuCwBw5FhZpeL1d0733IYi',
   },
   // Right
   {
