@@ -1,27 +1,31 @@
+import { GraphQLError } from 'graphql';
+
 import { errors } from '../definitions';
 
 const validateNanoleafResponse = (
   response: Response,
   ipAddress: string,
 ): void => {
-  console.log(response);
-  console.log('🔥', response.status);
   if (response.status === 401) {
-    throw new Error(JSON.stringify(errors.unauthenticated));
+    // TODO: Add logging for full error
+    throw new GraphQLError(errors.unauthenticated.friendlyMessage);
   }
 
   if (response.status === 400) {
-    throw new Error(JSON.stringify(errors.badJsonInput(ipAddress)));
+    // TODO: Add logging for full error
+    throw new GraphQLError(errors.badJsonInput(ipAddress).friendlyMessage);
   }
 
   if (response.status === 404) {
-    throw new Error(
-      JSON.stringify(errors.deviceNotFoundAtIpAddress(ipAddress)),
+    // TODO: Add logging for full error
+    throw new GraphQLError(
+      errors.deviceNotFoundAtIpAddress(ipAddress).friendlyMessage,
     );
   }
 
   if (response.status === 403) {
-    throw new Error(JSON.stringify(errors.authTokenNotRegistered));
+    // TODO: Add logging for full error
+    throw new GraphQLError(errors.authTokenNotRegistered.friendlyMessage);
   }
 };
 

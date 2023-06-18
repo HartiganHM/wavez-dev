@@ -17,7 +17,7 @@ const errors = {
     status: 403,
     message: 'The provided authToken is not registered with this device',
     friendlyMessage:
-      "The credentials for this device don't match what we have in our system. Please try again.",
+      'Unable to authenticate with Nanoleaf device. Ensure that your device is ready to authenticate by holding down the power button until the lights start blinking (5-7 seconds).',
   },
   badJsonInput: (ipAddress: string): ErrorResponse => ({
     status: 400,
@@ -33,7 +33,7 @@ const errors = {
     status: 404,
     message: `No device at ipAddress ${ipAddress} was found`,
     friendlyMessage:
-      "We couldn't find that device on your current ipAddress. Make sure you connnected to the same WiFi as your devices",
+      "We couldn't find that device on your current IP Address. Make sure you connnected to the same WiFi as your devices",
   }),
   unauthenticated: {
     status: 401,
